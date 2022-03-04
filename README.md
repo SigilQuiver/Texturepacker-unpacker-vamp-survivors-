@@ -14,4 +14,4 @@ I should also note that you shouldn't rename the files of the images if you want
 
 The whole point of this is to make cool new textures for games and perhaps share them, so have fun and make some pixelart
 
-[download here](https://github.com/SigilQuiver/Texturepacker-unpacker-vamp-survivors-/releases/tag/v0.0.1)
+[download here](https://github.com/SigilQuiver/Texturepacker-unpacker-vamp-survivors-/releases)
