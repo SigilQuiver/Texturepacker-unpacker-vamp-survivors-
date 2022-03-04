@@ -13,3 +13,5 @@ I've also added a repack functionality, so you can actually edit and then use th
 I should also note that you shouldn't rename the files of the images if you want to repack them, or they will just be ommitted from the repacked texture
 
 The whole point of this is to make cool new textures for games and perhaps share them, so have fun and make some pixelart
+
+[download here](https://github.com/SigilQuiver/Texturepacker-unpacker-vamp-survivors-/releases/tag/v0.0.1)
