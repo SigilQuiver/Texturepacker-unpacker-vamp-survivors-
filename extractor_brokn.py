@@ -53,10 +53,11 @@ def countDigits(string):
     return digits1 - 1
 
 
-def setDigits(string, digits, num):
+def setDigits(string, digits, num, addon=True):
     numstring = str(num)
-    while len(numstring) < digits:
-        numstring = "0" + numstring
+    if addon:
+        while len(numstring) < digits:
+            numstring = "0" + numstring
     return string[:-digits] + numstring
 
 def importFiles(exportFolder=cwd+"\\export_sheets\\",importFolder=cwd+"\\import\\",align="center"):
@@ -105,20 +106,28 @@ def importFiles(exportFolder=cwd+"\\export_sheets\\",importFolder=cwd+"\\import\
                         
                         num = int(baseName[-digits:]) + 1
                         nextName = setDigits(baseName, digits, num)
+                        if not(nextName + ".png" in frameDict.keys()):
+                            nextName = setDigits(baseName, digits, num, False)
                         while nextName + ".png" in frameDict.keys():
                             ahead.append(nextName)
                             num += 1
                             nextName = setDigits(baseName, digits, num)
+                            if not(nextName + ".png" in frameDict.keys()):
+                                nextName = setDigits(baseName, digits, num, False)
 
                         behind = []
                         
                         # look backwards for incrementing name
                         num = int(baseName[-digits:]) - 1
                         previousName = setDigits(baseName, digits, num)
+                        if not(previousName + ".png" in frameDict.keys()):
+                            previousName = setDigits(baseName, digits, num, False)
                         while previousName + ".png" in frameDict.keys():
                             behind.append(previousName)
                             num -= 1
                             previousName = setDigits(baseName, digits, num)
+                            if not(previousName + ".png" in frameDict.keys()):
+                                previousName = setDigits(baseName, digits, num, False)
 
                         behind.reverse()
                         spriteSheetNames = behind+[baseName]+ahead
@@ -231,20 +240,30 @@ def exportFiles(exportFolder=cwd + "\\export_vanilla\\",spriteSheet=True, align=
                     
                     num = int(baseName[-digits:]) + 1
                     nextName = setDigits(baseName, digits, num)
+                    
+                    if nextName + ".png" not in frameDict.keys():
+                        nextName = setDigits(baseName, digits, num, False)
+                    
                     while nextName + ".png" in frameDict.keys():
                         ahead.append(nextName)
                         num += 1
                         nextName = setDigits(baseName, digits, num)
+                        if nextName + ".png" not in frameDict.keys():
+                            nextName = setDigits(baseName, digits, num, False)
 
                     behind = []
                     
                     # look backwards for incrementing name
                     num = int(baseName[-digits:]) - 1
                     previousName = setDigits(baseName, digits, num)
+                    if previousName + ".png" not in frameDict.keys():
+                        previousName = setDigits(baseName, digits, num, False)
                     while previousName + ".png" in frameDict.keys():
                         behind.append(previousName)
                         num -= 1
                         previousName = setDigits(baseName, digits, num)
+                        if previousName + ".png" not in frameDict.keys():
+                            previousName = setDigits(baseName, digits, num, False)
 
                     behind.reverse()
                     spriteSheetNames = behind+[baseName]+ahead
@@ -255,6 +274,7 @@ def exportFiles(exportFolder=cwd + "\\export_vanilla\\",spriteSheet=True, align=
 
                         for used in spriteSheetNames:
                             nameSkip.append(used + ".png")
+                        print(spriteSheetNames)
 
                         """
                         for frameName in list(spriteSheetNames):
