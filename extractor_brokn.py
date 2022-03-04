@@ -53,10 +53,11 @@ def countDigits(string):
     return digits1 - 1
 
 
-def setDigits(string, digits, num):
+def setDigits(string, digits, num, addon=True):
     numstring = str(num)
-    while len(numstring) < digits:
-        numstring = "0" + numstring
+    if addon:
+        while len(numstring) < digits:
+            numstring = "0" + numstring
     return string[:-digits] + numstring
 
 def importFiles(exportFolder=cwd+"\\export_sheets\\",importFolder=cwd+"\\import\\",align="center"):
@@ -105,20 +106,28 @@ def importFiles(exportFolder=cwd+"\\export_sheets\\",importFolder=cwd+"\\import\
                         
                         num = int(baseName[-digits:]) + 1
                         nextName = setDigits(baseName, digits, num)
+                        if not(nextName + ".png" in frameDict.keys()):
+                            nextName = setDigits(baseName, digits, num, False)
                         while nextName + ".png" in frameDict.keys():
                             ahead.append(nextName)
                             num += 1
                             nextName = setDigits(baseName, digits, num)
+                            if not(nextName + ".png" in frameDict.keys()):
+                                nextName = setDigits(baseName, digits, num, False)
 
                         behind = []
                         
                         # look backwards for incrementing name
                         num = int(baseName[-digits:]) - 1
                         previousName = setDigits(baseName, digits, num)
+                        if not(previousName + ".png" in frameDict.keys()):
+                            previousName = setDigits(baseName, digits, num, False)
                         while previousName + ".png" in frameDict.keys():
                             behind.append(previousName)
                             num -= 1
                             previousName = setDigits(baseName, digits, num)
+                            if not(previousName + ".png" in frameDict.keys()):
+                                previousName = setDigits(baseName, digits, num, False)
 
                         behind.reverse()
                         spriteSheetNames = behind+[baseName]+ahead
@@ -149,7 +158,8 @@ def importFiles(exportFolder=cwd+"\\export_sheets\\",importFolder=cwd+"\\import\
                             
                             image = pygame.image.load(searchPath+img)
                             targetRect = image.get_rect()
-                            #print(targetRect,spritesheetRect)
+                            if targetRect != spritesheetRect:
+                                print(img)
                             
                             for name1 in spriteSheetNames:
                                 imgDims = frameDict[name1 + ".png"]["frame"]
@@ -171,7 +181,7 @@ def importFiles(exportFolder=cwd+"\\export_sheets\\",importFolder=cwd+"\\import\
                                     
 
                                 smallImage = image.subsurface(smallRect)
-
+                                smallImage.set_colorkey((255,2,0))
                                 bigImage.blit(smallImage,frameRect)
                                 
                                 #spritesheetImage.blit(smallImage, smallRect)
@@ -231,20 +241,30 @@ def exportFiles(exportFolder=cwd + "\\export_vanilla\\",spriteSheet=True, align=
                     
                     num = int(baseName[-digits:]) + 1
                     nextName = setDigits(baseName, digits, num)
+                    
+                    if nextName + ".png" not in frameDict.keys():
+                        nextName = setDigits(baseName, digits, num, False)
+                    
                     while nextName + ".png" in frameDict.keys():
                         ahead.append(nextName)
                         num += 1
                         nextName = setDigits(baseName, digits, num)
+                        if nextName + ".png" not in frameDict.keys():
+                            nextName = setDigits(baseName, digits, num, False)
 
                     behind = []
                     
                     # look backwards for incrementing name
                     num = int(baseName[-digits:]) - 1
                     previousName = setDigits(baseName, digits, num)
+                    if previousName + ".png" not in frameDict.keys():
+                        previousName = setDigits(baseName, digits, num, False)
                     while previousName + ".png" in frameDict.keys():
                         behind.append(previousName)
                         num -= 1
                         previousName = setDigits(baseName, digits, num)
+                        if previousName + ".png" not in frameDict.keys():
+                            previousName = setDigits(baseName, digits, num, False)
 
                     behind.reverse()
                     spriteSheetNames = behind+[baseName]+ahead
@@ -297,17 +317,12 @@ def exportFiles(exportFolder=cwd + "\\export_vanilla\\",spriteSheet=True, align=
                                 smallRect.bottom = bigRect.bottom
                                 smallRect.centerx = bigRect.centerx
 
+                            spritesheetImage.fill((255,3,0,255),bigRect)
+                            spritesheetImage.fill((0,0,0,0),smallRect)
                             spritesheetImage.blit(smallImage, smallRect)
 
                             # put box around the smaller images to show their border
-                            if imgDims["w"] < bigw and imgDims["h"] < bigh:
-                                smallRect.width += 2
-                                smallRect.height += 2
-                                smallRect.x -= 1
-                                smallRect.y -= 1
-                                # make the box not exactly black so people can fill all transparent
-
-                                pygame.draw.rect(spritesheetImage, (255, 3, 0), smallRect, 1)
+                            
 
                             # move the spritesheet position for the next frame
                             bigRect.x += bigw + gap
