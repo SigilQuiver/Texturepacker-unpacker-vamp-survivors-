@@ -158,7 +158,8 @@ def importFiles(exportFolder=cwd+"\\export_sheets\\",importFolder=cwd+"\\import\
                             
                             image = pygame.image.load(searchPath+img)
                             targetRect = image.get_rect()
-                            #print(targetRect,spritesheetRect)
+                            if targetRect != spritesheetRect:
+                                print(img)
                             
                             for name1 in spriteSheetNames:
                                 imgDims = frameDict[name1 + ".png"]["frame"]
@@ -180,7 +181,7 @@ def importFiles(exportFolder=cwd+"\\export_sheets\\",importFolder=cwd+"\\import\
                                     
 
                                 smallImage = image.subsurface(smallRect)
-
+                                smallImage.set_colorkey((255,2,0))
                                 bigImage.blit(smallImage,frameRect)
                                 
                                 #spritesheetImage.blit(smallImage, smallRect)
@@ -274,7 +275,6 @@ def exportFiles(exportFolder=cwd + "\\export_vanilla\\",spriteSheet=True, align=
 
                         for used in spriteSheetNames:
                             nameSkip.append(used + ".png")
-                        print(spriteSheetNames)
 
                         """
                         for frameName in list(spriteSheetNames):
@@ -317,17 +317,12 @@ def exportFiles(exportFolder=cwd + "\\export_vanilla\\",spriteSheet=True, align=
                                 smallRect.bottom = bigRect.bottom
                                 smallRect.centerx = bigRect.centerx
 
+                            spritesheetImage.fill((255,3,0,255),bigRect)
+                            spritesheetImage.fill((0,0,0,0),smallRect)
                             spritesheetImage.blit(smallImage, smallRect)
 
                             # put box around the smaller images to show their border
-                            if imgDims["w"] < bigw and imgDims["h"] < bigh:
-                                smallRect.width += 2
-                                smallRect.height += 2
-                                smallRect.x -= 1
-                                smallRect.y -= 1
-                                # make the box not exactly black so people can fill all transparent
-
-                                pygame.draw.rect(spritesheetImage, (255, 3, 0), smallRect, 1)
+                            
 
                             # move the spritesheet position for the next frame
                             bigRect.x += bigw + gap
